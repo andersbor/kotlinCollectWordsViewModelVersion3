@@ -1,6 +1,7 @@
 package com.example.collectwordsviewmodelversion
 
 import android.os.Bundle
+import android.text.InputType
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -9,10 +10,12 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import com.example.collectwordsviewmodelversion.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
@@ -29,8 +32,9 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            //    .setAction("Action", null).show()
+            showDialog()
         }
     }
 
@@ -54,5 +58,29 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    // Adapted from https://handyopinion.com/show-alert-dialog-with-an-input-field-edittext-in-android-kotlin/
+    private fun showDialog() {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle("Word")
+        val inputField = EditText(this)
+        inputField.hint = "Enter a word"
+        inputField.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(inputField)
+        //builder.setView(createEditText(this, "Enter a word", InputType.TYPE_CLASS_TEXT))
+        builder.setPositiveButton("OK") { dialog, which ->
+            val word = inputField.text.toString().trim()
+            if (word.isEmpty()) {
+                //inputField.error = "No word"
+                Snackbar.make(binding.root, "No word", Snackbar.LENGTH_LONG)
+                    /*.setAction("Action", null)*/.show()
+            } else {
+                val model: WordsViewModel by viewModels()
+                model.add(word)
+            }
+        }
+        builder.setNegativeButton("Cancel") { dialog, which -> dialog.cancel() }
+        builder.show()
     }
 }
