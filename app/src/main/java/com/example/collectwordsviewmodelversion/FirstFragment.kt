@@ -40,7 +40,7 @@ class FirstFragment : Fragment() {
         }
 
         wordsViewModel.words.observe(viewLifecycleOwner) { words ->
-            if (words.isEmpty()) {
+            if (words.isNullOrEmpty()) {
                 binding.textViewMessage.text = "No words"
             } else {
                 binding.textViewMessage.text = words.toString()
