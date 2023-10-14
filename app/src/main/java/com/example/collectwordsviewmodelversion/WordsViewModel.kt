@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class WordsViewModel : ViewModel() {
-    private var _words: MutableList<String> = mutableListOf<String>()
+    private var _words: MutableList<String> = mutableListOf()
     private var mutableLiveData: MutableLiveData<List<String>> = MutableLiveData()
 
     // Immutable access to list of words:
